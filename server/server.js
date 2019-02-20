@@ -1,43 +1,26 @@
 require('./config/config')
 const express = require('express');
+const mongoose = require('mongoose') 
+const bodyParser = require('body-parser')
 const app = express();
-var bodyParser = require('body-parser')
-// create application/x-www-form-urlencoded parser
-// create application/json parser
+
+// Para rescatar el body en post, put y delete. 
 app.use(bodyParser.urlencoded({
     extended: false
 }))
 app.use(bodyParser.json())
 
-app.get('/usuario', function (req, res) {
-    res.json('get usuario');
+//creo mi middleware para mis peticiones http que involucran al usuario 
+app.use( require ('./routes/usuario'))
+
+//====CONEXION MONGOOSE===
+mongoose.connect(process.env.URLDB, {useNewUrlParser: true} , (err, res)=> {
+    if (err) throw err 
+
+    console.log("Base de datos ONLINE");
 });
 
-app.post('/usuario', function (req, res) {
-    let body = req.body
-    if (body.nombre === undefined) {
-        res.status(400).json({
-            ok: false,
-            message: "nombre es requerido"
-        })
-    } else {
-        res.json({
-            body
-        });
-    }
-});
-
-app.put('/usuario/:id', function (req, res) {
-    let id = req.params.id
-    res.json(id);
-});
-
-app.delete('/usuario/:id', function (req, res) {
-    res.json('delete usuario');
-});
-
-
-//PUERTO 
+//====PUERTO====== 
 app.listen(process.env.PORT , () => {
     console.log(`escuchando puerto ${process.env.PORT}`);
 })
