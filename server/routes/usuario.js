@@ -1,11 +1,13 @@
 const express = require('express');
 const _ = require('underscore')
+const bcrypt = require('bcrypt')
 //Importo mi modelo de usuario 
 const Usuario = require('../models/usuario')
+const { verificaToken, verificaAdminRole } = require('../middlewares/autenticacion')
 const app = express();
 
 
-app.get('/usuarios', function (req, res) {
+app.get('/usuarios', verificaToken , (req, res) => {
 
     let desde = req.query.desde || 0
     desde = Number(desde)
@@ -36,13 +38,13 @@ app.get('/usuarios', function (req, res) {
         })
 });
 
-app.post('/usuario', function (req, res) {
+app.post('/usuario', [verificaToken, verificaAdminRole], (req, res) => {
     let body = req.body
 
     let usuario = new Usuario({
         nombre: body.nombre,
         email: body.email,
-        password: body.password,
+        password: bcrypt.hashSync(body.password, 10),
         role: body.role
     })
 
@@ -55,7 +57,6 @@ app.post('/usuario', function (req, res) {
             })
         }
 
-        usuarioDB.password = null
 
         res.json({
             ok: true,
@@ -65,7 +66,7 @@ app.post('/usuario', function (req, res) {
     })
 });
 
-app.put('/usuario/:id', function (req, res) {
+app.put('/usuario/:id', [verificaToken, verificaAdminRole],  (req, res) => {
     let id = req.params.id
     let body = _.pick(req.body, ['nombre', 'email', 'role', 'img', 'estado'])
 
@@ -88,7 +89,7 @@ app.put('/usuario/:id', function (req, res) {
     })
 });
 
-app.delete('/usuario/:id', function (req, res) {
+app.delete('/usuario/:id', [verificaToken, verificaAdminRole], (req, res) => {
     let id = req.params.id
 
     //Eliminar de la base de datos 

@@ -12,6 +12,18 @@ process.env.PORT = process.env.PORT || 1234
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev'
 
 // ============= 
+// VENCIMIENTO TOKEN
+// =============
+
+process.env.CADUCIDAD_TOKEN = 60*60*24*30
+
+// ============= 
+// SEED  
+// =============
+
+process.env.SEED = process.env.SEED || 'este-es-el-seed-de-desarrollo'
+
+// ============= 
 // BASE DE DATOS 
 // =============
 
@@ -21,7 +33,7 @@ let urlDB
     urlDB = 'mongodb://localhost:27017/cafe'
 }
 else {
-    urlDB =process.env.MONGO_URI
+    urlDB = process.env.MONGO_URI
 } 
 
 process.env.URLDB = urlDB
