@@ -10,6 +10,11 @@ process.env.PORT = process.env.PORT || 1234
 // =============
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev'
+// ============= 
+// CLIENT_ID_GOOGLE
+// =============
+
+process.env.CLIENT_ID = process.env.CLIENT_ID || "922575093822-gj7irb023tfv0o7o59dcioudjjdcjgq1.apps.googleusercontent.com"
 
 // ============= 
 // VENCIMIENTO TOKEN
